@@ -13,22 +13,22 @@
 	<title>Horizontal Timeline | CodyHouse</title>
 </head>
 <body>
-<section class="cd-horizontal-timeline">
+<section id="timeline">
 	<div class="timeline">
 		<div class="events-wrapper">
 			<div class="events">
 				<ol>
-					<li><a href="#0" data-date="16/01/2014" class="selected">16 Jan</a></li>
-					<li><a href="#0" data-date="28/02/2014">28 Feb</a></li>
-					<li><a href="#0" data-date="20/04/2014">20 Mar</a></li>
-					<li><a href="#0" data-date="20/05/2014">20 May</a></li>
-					<li><a href="#0" data-date="09/07/2014">09 Jul</a></li>
-					<li><a href="#0" data-date="30/08/2014">30 Aug</a></li>
-					<li><a href="#0" data-date="15/09/2014">15 Sep</a></li>
-					<li><a href="#0" data-date="01/11/2014">01 Nov</a></li>
-					<li><a href="#0" data-date="10/12/2014">10 Dec</a></li>
-					<li><a href="#0" data-date="19/01/2015">29 Jan</a></li>
-					<li><a href="#0" data-date="03/03/2015">3 Mar</a></li>
+					<li><a href="#0" data-date="16/01/2014" class="selected">16 Jan 2014</a></li>
+					<li><a href="#0" data-date="28/02/2014">28 Feb 2014</a></li>
+					<li><a href="#0" data-date="20/04/2014">20 Apr 2014</a></li>
+					<li><a href="#0" data-date="20/05/2014">20 May 2014</a></li>
+					<li><a href="#0" data-date="09/07/2014">09 Jul 2014</a></li>
+					<li><a href="#0" data-date="30/08/2014">30 Aug 2014</a></li>
+					<li><a href="#0" data-date="15/09/2014">15 Sep 2014</a></li>
+					<li><a href="#0" data-date="01/11/2014">01 Nov 2014</a></li>
+					<li><a href="#0" data-date="10/12/2014">10 Dec 2014</a></li>
+					<li><a href="#0" data-date="19/01/2015">29 Jan 2015</a></li>
+					<li><a href="#0" data-date="03/03/2015">3 Mar 2015</a></li>
 				</ol>
 
 				<span class="filling-line" aria-hidden="true"></span>
@@ -61,7 +61,7 @@
 
 			<li data-date="20/04/2014">
 				<h2>Event title here</h2>
-				<em>March 20th, 2014</em>
+				<em>April 20th, 2014</em>
 				<p>	
 					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum praesentium officia, fugit recusandae ipsa, quia velit nulla adipisci? Consequuntur aspernatur at, eaque hic repellendus sit dicta consequatur quae, ut harum ipsam molestias maxime non nisi reiciendis eligendi! Doloremque quia pariatur harum ea amet quibusdam quisquam, quae, temporibus dolores porro doloribus.
 				</p>
@@ -137,5 +137,10 @@
 <script src="js/jquery-2.1.4.js"></script>
 <script src="js/jquery.mobile.custom.min.js"></script>
 <script src="js/main.js"></script> <!-- Resource jQuery -->
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#timeline').horizontalTimeline();
+	});
+</script>
 </body>
 </html>
