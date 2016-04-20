@@ -16,7 +16,9 @@
 		// Create the defaults once
 		var pluginName = "horizontalTimeline",
 			defaults = {
-				eventsMinDistance: 60
+				eventsMinDistance: 60,
+				endlessStart: false,
+				distanceNorm: 0.5
 			};
 
 		// The actual plugin constructor
@@ -37,8 +39,7 @@
 		$.extend( Plugin.prototype, {
 			init: function() {
 				var self = this,
-					timeline = $(this.element),
-					timelineComponents = {};
+					timeline = $(this.element);
 				//cache timeline components 
 				self.timelineWrapper = timeline.find('.events-wrapper');
 				self.eventsWrapper = self.timelineWrapper.children('.events');
@@ -52,20 +53,20 @@
 				timeline.addClass('cd-horizontal-timeline').addClass('loaded');
 
 				//assign a left postion to the single events along the timeline
-				self.setDatePosition(timelineComponents, self.settings.eventsMinDistance);
+				self.setDatePosition(self.settings.eventsMinDistance);
 				//assign a width to the timeline
-				var timelineTotWidth = self.setTimelineWidth(timelineComponents, self.settings.eventsMinDistance);
+				var timelineTotWidth = self.setTimelineWidth(self.settings.eventsMinDistance);
 				//the timeline has been initialize - show it
 
 				//detect click on the next arrow
 				self.timelineNavigation.on('click', '.next', function(event){
 					event.preventDefault();
-					self.updateSlide(timelineComponents, timelineTotWidth, 'next');
+					self.updateSlide(timelineTotWidth, 'next');
 				});
 				//detect click on the prev arrow
 				self.timelineNavigation.on('click', '.prev', function(event){
 					event.preventDefault();
-					self.updateSlide(timelineComponents, timelineTotWidth, 'prev');
+					self.updateSlide(timelineTotWidth, 'prev');
 				});
 				//detect click on the a single event - show new event content
 				self.eventsWrapper.on('click', 'a', function(event){
@@ -80,35 +81,35 @@
 				//on swipe, show next/prev event content
 				self.eventsContent.on('swipeleft', function(){
 					var mq = self.checkMQ();
-					( mq == 'mobile' ) && self.showNewContent(timelineComponents, timelineTotWidth, 'next');
+					( mq == 'mobile' ) && self.showNewContent(timelineTotWidth, 'next');
 				});
 				self.eventsContent.on('swiperight', function(){
 					var mq = self.checkMQ();
-					( mq == 'mobile' ) && self.showNewContent(timelineComponents, timelineTotWidth, 'prev');
+					( mq == 'mobile' ) && self.showNewContent(timelineTotWidth, 'prev');
 				});
 
 				//keyboard navigation
 				$(document).keyup(function(event){
 					if(event.which=='37' && self.elementInViewport(timeline.get(0)) ) {
-						self.showNewContent(timelineComponents, timelineTotWidth, 'prev');
+						self.showNewContent(timelineTotWidth, 'prev');
 					} else if( event.which=='39' && self.elementInViewport(timeline.get(0))) {
-						self.showNewContent(timelineComponents, timelineTotWidth, 'next');
+						self.showNewContent(timelineTotWidth, 'next');
 					}
 				});
 			},
 
-			updateSlide: function(timelineComponents, timelineTotWidth, string) {
+			updateSlide: function(timelineTotWidth, string) {
 				//retrieve translateX value of self.eventsWrapper
 				var self = this,
 					translateValue = self.getTranslateValue(self.eventsWrapper),
 					wrapperWidth = Number(self.timelineWrapper.css('width').replace('px', ''));
 				//translate the timeline to the left('next')/right('prev') 
 				(string == 'next') 
-					? self.translateTimeline(timelineComponents, translateValue - wrapperWidth + self.settings.eventsMinDistance, wrapperWidth - timelineTotWidth)
-					: self.translateTimeline(timelineComponents, translateValue + wrapperWidth - self.settings.eventsMinDistance);
+					? self.translateTimeline(translateValue - wrapperWidth + self.settings.eventsMinDistance, wrapperWidth - timelineTotWidth)
+					: self.translateTimeline(translateValue + wrapperWidth - self.settings.eventsMinDistance);
 			},
 
-			showNewContent: function(timelineComponents, timelineTotWidth, string) {
+			showNewContent: function(timelineTotWidth, string) {
 				//go from one event to the next/previous one
 				var self = this,
 					visibleContent =  self.eventsContent.find('.selected'),
@@ -123,11 +124,11 @@
 					newEvent.addClass('selected');
 					selectedDate.removeClass('selected');
 					self.updateOlderEvents(newEvent);
-					self.updateTimelinePosition(string, newEvent, timelineComponents);
+					self.updateTimelinePosition(string, newEvent);
 				}
 			},
 
-			updateTimelinePosition: function(string, event, timelineComponents) {
+			updateTimelinePosition: function(string, event) {
 				//translate timeline to the left/right according to the position of the selected event
 				var self = this,
 					eventStyle = window.getComputedStyle(event.get(0), null),
@@ -137,11 +138,11 @@
 				var timelineTranslate = self.getTranslateValue(self.eventsWrapper);
 
 		        if( (string == 'next' && eventLeft > timelineWidth - timelineTranslate) || (string == 'prev' && eventLeft < - timelineTranslate) ) {
-		        	self.translateTimeline(timelineComponents, - eventLeft + timelineWidth/2, timelineWidth - timelineTotWidth);
+		        	self.translateTimeline(- eventLeft + timelineWidth/2, timelineWidth - timelineTotWidth);
 		        }
 			},
 
-			translateTimeline: function(timelineComponents, value, totWidth) {
+			translateTimeline: function(value, totWidth) {
 				var self = this,
 					eventsWrapper = self.eventsWrapper.get(0);
 				value = (value > 0) ? 0 : value; //only negative translate value
@@ -158,21 +159,32 @@
 					eventStyle = window.getComputedStyle(selectedEvent.get(0), null),
 					eventLeft = eventStyle.getPropertyValue("left"),
 					eventWidth = eventStyle.getPropertyValue("width");
-				eventLeft = Number(eventLeft.replace('px', '')) + Number(eventWidth.replace('px', ''))/2;
+				
+				eventLeft = Number(eventLeft.replace('px', '')) + Number(eventWidth.replace('px', '')) / 2;
+				
+				if (self.settings.endlessStart == false) {
+					var firstEvent = self.timelineEvents.first(),
+						firstEventLeft = Number(firstEvent.css('left').replace('px', '')),
+						firstEventWidth = Number(firstEvent.css('width').replace('px', '')) / 2;
+					eventLeft -= (firstEventLeft + firstEventWidth);
+					self.fillingLine.css('left', (firstEventLeft + firstEventWidth) + 'px');
+				}
+				
 				var scaleValue = eventLeft/totWidth;
 				self.setTransformValue(filling.get(0), 'scaleX', scaleValue);
 			},
 
-			setDatePosition: function(timelineComponents, min) {
+			setDatePosition: function(min) {
 				var self = this;
 				for (var i = 0; i < self.timelineDates.length; i++) { 
 				    var distance = self.daydiff(self.timelineDates[0], self.timelineDates[i]),
-				    	distanceNorm = Math.round(distance/self.eventsMinLapse) + 2;
-				    self.timelineEvents.eq(i).css('left', distanceNorm*min+'px');
+				    	distanceNorm = Math.round(distance/self.eventsMinLapse),
+				    	left = distanceNorm*min+'px';
+				    self.timelineEvents.eq(i).css('left', left);
 				}
 			},
 
-			setTimelineWidth: function(timelineComponents, width) {
+			setTimelineWidth: function(width) {
 				var self = this,
 					timeSpan = self.daydiff(self.timelineDates[0], self.timelineDates[self.timelineDates.length-1]),
 					timeSpanNorm = timeSpan/self.eventsMinLapse,
@@ -180,7 +192,7 @@
 					totalWidth = timeSpanNorm*width;
 				self.eventsWrapper.css('width', totalWidth+'px');
 				self.updateFilling(self.eventsWrapper.find('a.selected'), self.fillingLine, totalWidth);
-				self.updateTimelinePosition('next', self.eventsWrapper.find('a.selected'), timelineComponents);
+				self.updateTimelinePosition('next', self.eventsWrapper.find('a.selected'));
 			
 				return totalWidth;
 			},
