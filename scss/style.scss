@@ -98,6 +98,10 @@ Main Components
 		/* width will be set using JavaScript */
 		background: darken($color-4, 10%);
 		@include transition(transform .4s);
+
+		ul, ol {
+			list-style: none;
+		}
 	}
 
 	.filling-line {
@@ -158,6 +162,10 @@ Main Components
 		}
 	}
 
+	.div {
+		margin: 0;
+	}
+
 	@include MQ(L) {
 		margin: 6em auto;
 		
@@ -168,54 +176,59 @@ Main Components
 	}
 }
 
-.cd-timeline-navigation a {
-	/* these are the left/right arrows to navigate the timeline */
-	position: absolute;
-	z-index: 1;
-	@include center(y);
-	height: 34px;
-	width: 34px;
-	border-radius: 50%;
-	border: 2px solid darken($color-4, 10%);
-	/* replace text with an icon */
-	overflow: hidden;
-	color: transparent;
-	text-indent: 100%;
-	white-space: nowrap;
-	@include transition(border-color .3s);
+.cd-timeline-navigation {
 	
-	&::after {
-		/* arrow icon */
-		content: '';
+	list-style: none;
+
+	a {
+		/* these are the left/right arrows to navigate the timeline */
 		position: absolute;
-		height: 16px;
-		width: 16px;
-		@include center;
-		background: url(../img/cd-arrow.svg) no-repeat 0 0;
-	}
-
-	&.prev {
-		left: 0;
-		@include transform(translateY(-50%) rotate(180deg));
-	}
-
-	&.next {
-		right: 0;
-	}
-
-	.no-touch &:hover {
-		border-color: $color-2;
-	}
-
-	&.inactive {
-		cursor: not-allowed;
-
+		z-index: 1;
+		@include center(y);
+		height: 34px;
+		width: 34px;
+		border-radius: 50%;
+		border: 2px solid darken($color-4, 10%);
+		/* replace text with an icon */
+		overflow: hidden;
+		color: transparent;
+		text-indent: 100%;
+		white-space: nowrap;
+		@include transition(border-color .3s);
+		
 		&::after {
-			background-position: 0 -16px;
+			/* arrow icon */
+			content: '';
+			position: absolute;
+			height: 16px;
+			width: 16px;
+			@include center;
+			background: url(../img/cd-arrow.svg) no-repeat 0 0;
+		}
+
+		&.prev {
+			left: 0;
+			@include transform(translateY(-50%) rotate(180deg));
+		}
+
+		&.next {
+			right: 0;
 		}
 
 		.no-touch &:hover {
-			border-color: darken($color-4, 10%);
+			border-color: $color-2;
+		}
+
+		&.inactive {
+			cursor: not-allowed;
+
+			&::after {
+				background-position: 0 -16px;
+			}
+
+			.no-touch &:hover {
+				border-color: darken($color-4, 10%);
+			}
 		}
 	}
 }
@@ -223,9 +236,13 @@ Main Components
 .cd-horizontal-timeline .events-content {
 	position: relative;
 	width: 100%;
-	margin: 2em 0;
 	overflow: hidden;
 	@include transition(height .4s);
+
+	ul, ol {
+		list-style: none;
+		padding: 0;
+	}
 
 	li {
 		position: absolute;

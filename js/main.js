@@ -17,6 +17,7 @@
         var pluginName = "horizontalTimeline",
             defaults = {
                 firstEventOffset: 60,
+                contentOffset: 30,
                 endlessStart: false,
                 distance: {
                     day: 15,
@@ -219,7 +220,7 @@
                     visibleContent.removeClass('leave-right leave-left');
                     selectedContent.removeClass('enter-left enter-right');
                 });
-                eventsContent.css('height', selectedContentHeight+'px');
+                eventsContent.css('height', selectedContentHeight + self.settings.contentOffset +'px');
             },
 
             updateOlderEvents: function(event) {
