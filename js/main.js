@@ -184,8 +184,15 @@
                 var self = this,
                     distances = [self.settings.firstEventOffset].concat(self.timelineDistances),
                     left = 0;
+                var eventsWidth = self.timelineEvents.map(function() {
+                    return $(this).width();
+                });
                 for (var i = 0; i < self.timelineDates.length; i++) {
-                    left += distances[i];
+                    var minDistance = (eventsWidth[i] + eventsWidth[i-1] + 10) / 2;
+                    var distance = distances[i];
+                    if (distance < minDistance)
+                        distance = minDistance;
+                    left += distance;
                     self.timelineEvents.eq(i).css('left', left + 'px');
                 }
             },
