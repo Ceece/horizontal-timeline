@@ -1,10 +1,7 @@
-@import 'bourbon'; // http://bourbon.io/
-
-@import '../partials/variables'; // colors, fonts etc...
-
-@import '../partials/mixins'; // custom mixins
-
-@import '../partials/layout'; // responsive grid and media queries
+@import "../bourbon/bourbon"; // http://bourbon.io/
+@import 'variables'; // colors, fonts etc...
+@import 'mixins'; // custom mixins
+@import 'layout'; // responsive grid and media queries
 
 /* -------------------------------- 
 
