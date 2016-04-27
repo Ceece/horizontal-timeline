@@ -19,6 +19,7 @@
                 firstEventOffset: 60,
                 contentOffset: 30,
                 endlessStart: false,
+                arrowToSlide: false,
                 rotate: true,
                 height: 100,
                 distance: {
@@ -77,12 +78,18 @@
                 //detect click on the next arrow
                 self.timelineNavigation.on('click', '.next', function(event){
                     event.preventDefault();
-                    self.updateSlide(timelineTotWidth, 'next');
+                    if( self.arrowToSlide)
+                        self.updateSlide(timelineTotWidth, 'next');
+                    else
+                        self.showNewContent(timelineTotWidth, 'next');
                 });
                 //detect click on the prev arrow
                 self.timelineNavigation.on('click', '.prev', function(event){
                     event.preventDefault();
-                    self.updateSlide(timelineTotWidth, 'prev');
+                    if( self.arrowToSlide)
+                        self.updateSlide(timelineTotWidth, 'prev');
+                    else
+                        self.showNewContent(timelineTotWidth, 'prev');
                 });
                 //detect click on the a single event - show new event content
                 self.eventsWrapper.on('click', 'a', function(event){
