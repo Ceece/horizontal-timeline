@@ -19,8 +19,10 @@
                 firstEventOffset: 60,
                 contentOffset: 30,
                 endlessStart: false,
+                rotate: true,
+                height: 100,
                 distance: {
-                    day: 15,
+                    day: 20,
                     week: 50,
                     month: 130,
                     year: 500
@@ -50,6 +52,8 @@
                 timeline.append(template);
                 timeline.find('ul, ol').eq(0).prependTo( timeline.find('.events') );
                 timeline.find('ul, ol').eq(0).prependTo( timeline.find('.events-content') );
+                timeline.find('.timeline').css('height', self.settings.height + 'px');
+
                 //cache timeline components 
                 self.timelineWrapper = timeline.find('.events-wrapper');
                 self.eventsWrapper = self.timelineWrapper.children('.events');
@@ -61,6 +65,8 @@
                 self.eventsContent = timeline.children('.events-content');
 
                 timeline.addClass('cd-horizontal-timeline').addClass('loaded');
+                if (self.settings.rotate)
+                    self.timelineEvents.addClass('rotate');
 
                 //assign a left postion to the single events along the timeline
                 self.setDatePosition();
@@ -170,14 +176,22 @@
                     eventLeft = eventStyle.getPropertyValue("left"),
                     eventWidth = eventStyle.getPropertyValue("width");
                 
-                eventLeft = Number(eventLeft.replace('px', '')) + Number(eventWidth.replace('px', '')) / 2;
+                eventLeft = Number(eventLeft.replace('px', ''));
+                if (self.settings.rotate === false)
+                    eventLeft += Number(eventWidth.replace('px', '')) / 2;
+
                 
                 if (self.settings.endlessStart == false) {
                     var firstEvent = self.timelineEvents.first(),
                         firstEventLeft = Number(firstEvent.css('left').replace('px', '')),
-                        firstEventWidth = Number(firstEvent.css('width').replace('px', '')) / 2;
-                    eventLeft -= (firstEventLeft + firstEventWidth);
-                    self.fillingLine.css('left', (firstEventLeft + firstEventWidth) + 'px');
+                        firstEventWidth = self.settings.rotate ? 0 : (Number(firstEvent.css('width').replace('px', '')) / 2),
+                        fillingLineOffset = self.settings.rotate ? -7 : 0;
+                    eventLeft -= firstEventLeft + firstEventWidth;
+                    self.fillingLine.css('left', (firstEventLeft + firstEventWidth + fillingLineOffset) + 'px');
+                }
+
+                if (self.settings.endlessStart && self.settings.rotate) {
+                    eventLeft -= 7;
                 }
                 
                 var scaleValue = eventLeft/totWidth;
@@ -188,13 +202,15 @@
                 var self = this,
                     distances = [self.settings.firstEventOffset].concat(self.timelineDistances),
                     left = 0;
+
                 var eventsWidth = self.timelineEvents.map(function() {
                     return $(this).width();
                 });
+
                 for (var i = 0; i < self.timelineDates.length; i++) {
                     var minDistance = (eventsWidth[i] + eventsWidth[i-1] + 10) / 2;
                     var distance = distances[i];
-                    if (distance < minDistance)
+                    if (distance < minDistance && self.settings.rotate === false)
                         distance = minDistance;
                     left += distance;
                     self.timelineEvents.eq(i).css('left', left + 'px');
@@ -330,8 +346,10 @@
                         return limitDistance(diff, month, self.settings.distance.month);
                     } else if (diff >= week) {
                         return limitDistance(diff, week, self.settings.distance.week);
-                    } else {
+                    } else if (diff >= day) {
                         return limitDistance(diff, day, self.settings.distance.day);
+                    } else {
+                        return day;
                     }
                 });
             },

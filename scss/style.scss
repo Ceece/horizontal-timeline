@@ -55,7 +55,6 @@ Main Components
 
 	.timeline {
 		position: relative;
-		height: 100px;
 		width: 90%;
 		max-width: 800px;
 		margin: 0 auto;
@@ -93,7 +92,7 @@ Main Components
 		position: absolute;
 		z-index: 1;
 		left: 0;
-		top: 49px;
+	    @include y(80%);
 		height: 2px;
 		/* width will be set using JavaScript */
 		background: darken($color-4, 10%);
@@ -116,6 +115,18 @@ Main Components
 		@include transform(scaleX(0));
 		@include transform-origin(left center);
 		@include transition(transform .3s);
+	}
+
+	.events a.rotate {
+		padding-bottom: 0;
+		@include transform(rotate(-40deg));
+		@include transform-origin(0 100%);
+
+		&::after {
+			left: -15px;
+			bottom: 2px;
+    		@include transform(translateX(0));
+		}
 	}
 
 	.events a {
@@ -184,7 +195,7 @@ Main Components
 		/* these are the left/right arrows to navigate the timeline */
 		position: absolute;
 		z-index: 1;
-		@include center(y);
+	    @include y(80%);
 		height: 34px;
 		width: 34px;
 		border-radius: 50%;

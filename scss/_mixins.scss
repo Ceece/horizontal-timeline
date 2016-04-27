@@ -19,3 +19,9 @@
     @include transform(translateY(-50%));
   }
 }
+
+@mixin y($param) {
+  top: $param;
+  bottom: auto;
+  @include transform(translateY(-50%));
+}
