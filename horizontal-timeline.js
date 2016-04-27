@@ -49,23 +49,25 @@
             init: function() {
                 var self = this,
                     timeline = $(this.element),
-                    template = '<div class="timeline"><div class="events-wrapper"><div class="events"><span class="filling-line" aria-hidden="true"></span></div></div><ul class="cd-timeline-navigation"><li><a href="#" class="prev inactive">Prev</a></li><li><a href="#" class="next">Next</a></li></ul></div><div class="events-content"></div>';
+                    template = '<div class="ht-timeline"><div class="ht-events-wrapper"><div class="ht-events"><span class="ht-filling-line" aria-hidden="true"></span></div></div><ul class="ht-timeline-navigation"><li><a href="#" class="prev inactive">Prev</a></li><li><a href="#" class="next">Next</a></li></ul></div><div class="ht-events-content"></div>';
                 timeline.append(template);
-                timeline.find('ul, ol').eq(0).prependTo( timeline.find('.events') );
-                timeline.find('ul, ol').eq(0).prependTo( timeline.find('.events-content') );
-                timeline.find('.timeline').css('height', self.settings.height + 'px');
+                
+                self.timelineWrapper = timeline.find('.ht-events-wrapper');
+                self.eventsWrapper = self.timelineWrapper.children('.ht-events');
+                self.eventsContent = timeline.children('.ht-events-content');
+                self.timelineNavigation = timeline.find('.ht-timeline-navigation');
+
+                timeline.find('ul, ol').eq(0).prependTo( self.eventsWrapper );
+                timeline.find('ul, ol').eq(0).prependTo( self.eventsContent );
+                timeline.find('.ht-timeline').css('height', self.settings.height + 'px');
 
                 //cache timeline components 
-                self.timelineWrapper = timeline.find('.events-wrapper');
-                self.eventsWrapper = self.timelineWrapper.children('.events');
-                self.fillingLine = self.eventsWrapper.children('.filling-line');
+                self.fillingLine = self.eventsWrapper.children('.ht-filling-line');
                 self.timelineEvents = self.eventsWrapper.find('a');
                 self.timelineDates = self.parseDate(self.timelineEvents);
                 self.timelineDistances = self.timelineDistance(self.timelineDates);
-                self.timelineNavigation = timeline.find('.cd-timeline-navigation');
-                self.eventsContent = timeline.children('.events-content');
 
-                timeline.addClass('cd-horizontal-timeline').addClass('loaded');
+                timeline.addClass('ht-container').addClass('loaded');
                 if (self.settings.rotate)
                     self.timelineEvents.addClass('rotate');
 
@@ -177,7 +179,7 @@
             },
 
             updateFilling: function(selectedEvent, filling, totWidth) {
-                //change .filling-line length according to the selected event
+                //change .ht-filling-line length according to the selected event
                 var self = this,
                     eventStyle = window.getComputedStyle(selectedEvent.get(0), null),
                     eventLeft = eventStyle.getPropertyValue("left"),

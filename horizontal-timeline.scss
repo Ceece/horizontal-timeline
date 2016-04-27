@@ -3,43 +3,25 @@
 @import 'partials/mixins'; // custom mixins
 @import 'partials/layout'; // responsive grid and media queries
 
-/* -------------------------------- 
-
-Primary style
-
--------------------------------- */
-
-*, *::after, *::before {
-	box-sizing: border-box;
-}
-
-html {
-	font-size: 62.5%;
-}
-
-body {
-	font: {
-		size: 1.6rem;
-		family: $primary-font; // variables inside partials > _variables.scss
-	}
-	color: $color-1;
-	background-color: $color-4;
-}
-
-a {
-	color: $color-2;
-	text-decoration: none;
-}
+@import url(https://fonts.googleapis.com/css?family=Playfair+Display:700,900|Fira+Sans:400,400italic);
 
 /* -------------------------------- 
-
 Main Components 
-
 -------------------------------- */
 
-.cd-horizontal-timeline {
-	opacity: 0;
-	margin: 2em auto;
+.ht-container {
+	
+	color: $color-1;
+	font-family: $primary-font;
+	*, *::after, *::before {
+		box-sizing: border-box;
+	}
+
+	a {
+		color: $color-2;
+		text-decoration: none;
+	}
+
 	@include transition(opacity .2s);
 
 	&::before {
@@ -53,14 +35,14 @@ Main Components
 		opacity: 1;
 	}
 
-	.timeline {
+	.ht-timeline {
 		position: relative;
 		width: 90%;
 		max-width: 800px;
 		margin: 0 auto;
 	}
 
-	.events-wrapper {
+	.ht-events-wrapper {
 		position: relative;
 		height: 100%;
 		margin: 0 40px;
@@ -75,19 +57,9 @@ Main Components
 			height: 100%;
 			width: 20px;
 		}
-
-		&::before {
-			left: 0;
-	    	@include background-image(linear-gradient(to right,$color-4, rgba($color-4, 0)));
-		}
-
-		&::after {
-			right: 0;
-			@include background-image(linear-gradient(to left,$color-4, rgba($color-4, 0)));
-		}
 	}
 
-	.events {
+	.ht-events {
 		/* this is the grey line/timeline */
 		position: absolute;
 		z-index: 1;
@@ -101,9 +73,65 @@ Main Components
 		ul, ol {
 			list-style: none;
 		}
+
+		a {
+			position: absolute;
+			bottom: 0;
+			z-index: 2;
+			text-align: center;
+			padding-bottom: 15px;
+			color: $color-1;
+			font-size: 0.8em;
+			/* fix bug on Safari - text flickering while timeline translates */
+			@include transform(translateZ(0));
+
+			&::after {
+				/* this is used to create the event spot */
+				content: '';
+				position: absolute;
+				@include center(x);
+				bottom: -5px;
+				height: 12px;
+				width: 12px;
+				border-radius: 50%;
+				border: 2px solid darken($color-4, 10%);
+				background-color: $color-4;
+				@include transition(background-color .3s, border-color .3s);
+			}
+
+			.no-touch &:hover::after {
+				background-color: $color-2;
+				border-color: $color-2;
+			}
+
+			&.selected {
+				pointer-events: none;
+
+				&::after {
+					background-color: $color-2;
+					border-color: $color-2;
+				}
+			}
+
+			&.older-event::after {
+				border-color: $color-2;
+			}
+		}
+
+		a.rotate {
+			padding-bottom: 0;
+			@include transform(rotate(-40deg));
+			@include transform-origin(0 100%);
+
+			&::after {
+				left: -15px;
+				bottom: 2px;
+				@include transform(translateX(0));
+			}
+		}
 	}
 
-	.filling-line {
+	.ht-filling-line {
 		/* this is used to create the green line filling the timeline */
 		position: absolute;
 		z-index: 1;
@@ -117,69 +145,7 @@ Main Components
 		@include transition(transform .3s);
 	}
 
-	.events a.rotate {
-		padding-bottom: 0;
-		@include transform(rotate(-40deg));
-		@include transform-origin(0 100%);
-
-		&::after {
-			left: -15px;
-			bottom: 2px;
-    		@include transform(translateX(0));
-		}
-	}
-
-	.events a {
-		position: absolute;
-		bottom: 0;
-		z-index: 2;
-		text-align: center;
-		font-size: 1.3rem;
-		padding-bottom: 15px;
-		color: $color-1;
-		/* fix bug on Safari - text flickering while timeline translates */
-		@include transform(translateZ(0));
-
-		&::after {
-			/* this is used to create the event spot */
-			content: '';
-			position: absolute;
-			@include center(x);
-			bottom: -5px;
-			height: 12px;
-			width: 12px;
-			border-radius: 50%;
-			border: 2px solid darken($color-4, 10%);
-			background-color: $color-4;
-			@include transition(background-color .3s, border-color .3s);
-		}
-
-		.no-touch &:hover::after {
-			background-color: $color-2;
-			border-color: $color-2;
-		}
-
-		&.selected {
-			pointer-events: none;
-
-			&::after {
-				background-color: $color-2;
-				border-color: $color-2;
-			}
-		}
-
-		&.older-event::after {
-			border-color: $color-2;
-		}
-	}
-
-	.div {
-		margin: 0;
-	}
-
-	@include MQ(L) {
-		margin: 6em auto;
-		
+	@include MQ(L) {		
 		&::before {
 			/* never visible - this is used in jQuery to check the current MQ */
 			content: 'desktop';
@@ -187,7 +153,7 @@ Main Components
 	}
 }
 
-.cd-timeline-navigation {
+.ht-timeline-navigation {
 	
 	list-style: none;
 
@@ -244,7 +210,7 @@ Main Components
 	}
 }
 
-.cd-horizontal-timeline .events-content {
+.ht-container .ht-events-content {
 	position: relative;
 	width: 100%;
 	overflow: hidden;
@@ -295,8 +261,6 @@ Main Components
 
 	h2 {
 		font-weight: bold;
-		font-size: 2.6rem;
-		font-family: $secondary-font;
 		font-weight: 700;
 		line-height: 1.2;
 	}
@@ -312,7 +276,6 @@ Main Components
 	}
 
 	p {
-		font-size: 1.4rem;
 		color: shade($color-4, 40%);
 	}
 
@@ -323,15 +286,12 @@ Main Components
 	@include MQ(M) {
 
 		h2 {
-			font-size: 7rem;
 		}
 
 		em {
-			font-size: 2rem;
 		}
 
 		p {
-			font-size: 1.8rem;
 		}
 	}
 	
