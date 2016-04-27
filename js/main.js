@@ -45,7 +45,11 @@
         $.extend( Plugin.prototype, {
             init: function() {
                 var self = this,
-                    timeline = $(this.element);
+                    timeline = $(this.element),
+                    template = '<div class="timeline"><div class="events-wrapper"><div class="events"><span class="filling-line" aria-hidden="true"></span></div></div><ul class="cd-timeline-navigation"><li><a href="#" class="prev inactive">Prev</a></li><li><a href="#" class="next">Next</a></li></ul></div><div class="events-content"></div>';
+                timeline.append(template);
+                timeline.find('ul, ol').eq(0).prependTo( timeline.find('.events') );
+                timeline.find('ul, ol').eq(0).prependTo( timeline.find('.events-content') );
                 //cache timeline components 
                 self.timelineWrapper = timeline.find('.events-wrapper');
                 self.eventsWrapper = self.timelineWrapper.children('.events');
@@ -199,7 +203,7 @@
 
             setTimelineWidth: function(width) {
                 var self = this,
-                    totalWidth = self.settings.firstEventOffset * 3 + self.timelineDistances.reduce(function(a, b) { return a + b});
+                    totalWidth = self.settings.firstEventOffset * 4 + self.timelineDistances.reduce(function(a, b) { return a + b});
                 self.eventsWrapper.css('width', totalWidth+'px');
                 self.updateFilling(self.eventsWrapper.find('a.selected'), self.fillingLine, totalWidth);
                 self.updateTimelinePosition('next', self.eventsWrapper.find('a.selected'));
