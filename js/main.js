@@ -56,7 +56,7 @@
                 self.fillingLine = self.eventsWrapper.children('.filling-line');
                 self.timelineEvents = self.eventsWrapper.find('a');
                 self.timelineDates = self.parseDate(self.timelineEvents);
-                self.timelineDistances = self.parseDistance(self.timelineDates);
+                self.timelineDistances = self.timelineDistance(self.timelineDates);
                 self.timelineNavigation = timeline.find('.cd-timeline-navigation');
                 self.eventsContent = timeline.children('.events-content');
 
@@ -297,7 +297,7 @@
                 return Math.round(second-first);
             },
 
-            parseDiff: function(dates) {
+            diffs: function(dates) {
                 //determine the distance among events
                 var self = this,
                     diffs = [];
@@ -308,24 +308,30 @@
                 return diffs;
             },
 
-            parseDistance: function(dates) {
+            timelineDistance: function(dates) {
                 var self = this,
-                    diffs = self.parseDiff(dates),
+                    diffs = self.diffs(dates),
                     day = 86400000,
                     week = 8 * day,
                     month = 30 * day,
                     year = 365 * day;
+
+                var limitDistance = function(diff, scale, distance) {
+                    var distance = diff / scale * distance;
+                    if (distance > scale * 3)
+                        return scale * 3;
+                    return distance;
+                }
+
                 return diffs.map(function(diff) {
                     if (diff >= year) {
-                        return diff / year * self.settings.distance.year;
+                        return limitDistance(diff, year, self.settings.distance.year);
                     } else if (diff >= month) {
-                        return diff / month  * self.settings.distance.month;
+                        return limitDistance(diff, month, self.settings.distance.month);
                     } else if (diff >= week) {
-                        return diff / week * self.settings.distance.week;
-                    } else if (diff >= day) {
-                        return diff / day * self.settings.distance.day;
+                        return limitDistance(diff, week, self.settings.distance.week);
                     } else {
-                        return self.settings.distance.day;
+                        return limitDistance(diff, day, self.settings.distance.day);
                     }
                 });
             },
