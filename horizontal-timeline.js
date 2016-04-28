@@ -21,12 +21,11 @@
                 navToSlide: false,
                 rotate: true,
                 height: 100,
-                distance: {
-                    day: 20,
-                    week: 50,
-                    month: 130,
-                    year: 500
-                }
+                distanceDay: 15,
+                distanceWeek: 50,
+                distanceMonth: 160,
+                distanceYear: 500,
+                maxDistanceTimes: 3
             };
 
         // The actual plugin constructor
@@ -359,22 +358,22 @@
 
                 var limitDistance = function(diff, scale, distance) {
                     var distance = diff / scale * distance;
-                    if (distance > scale * 3)
-                        return scale * 3;
+                    if (distance > scale * self.settings.maxDistanceTimes)
+                        return scale * self.settings.maxDistanceTimes;
                     return distance;
                 }
 
                 return diffs.map(function(diff) {
                     if (diff >= year) {
-                        return limitDistance(diff, year, self.settings.distance.year);
+                        return limitDistance(diff, year, self.settings.distanceYear);
                     } else if (diff >= month) {
-                        return limitDistance(diff, month, self.settings.distance.month);
+                        return limitDistance(diff, month, self.settings.distanceMonth);
                     } else if (diff >= week) {
-                        return limitDistance(diff, week, self.settings.distance.week);
+                        return limitDistance(diff, week, self.settings.distanceWeek);
                     } else if (diff >= day) {
-                        return limitDistance(diff, day, self.settings.distance.day);
+                        return limitDistance(diff, day, self.settings.distanceDay);
                     } else {
-                        return limitDistance(day, day, self.settings.distance.day);
+                        return limitDistance(day, day, self.settings.distanceDay);
                     }
                 });
             },

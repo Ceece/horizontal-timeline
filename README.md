@@ -51,8 +51,13 @@ For download, see https://github.com/Ceece/horizontal-timeline/releases
 
 ## Options
 
-    rotate          rotation of events (default: true)
-    height          timeline's height in px (default: 100)
-    endlessStart    start timeline from endless (default: false)
-    navToSlide      click nav arrow to slide (default: false)
-    eventOffset     event offset before and after timeline in px (default: 60)
+    rotate             rotation of events (default: true)
+    height             timeline's height in px (default: 100)
+    distanceDay        distance of Day in px (default: 15)
+    distanceWeek       distance of Week in px (default: 50)
+    distanceMonth      distance of Month in px (default: 160)
+    distanceYear       distance of Year in px (default: 500)
+    maxDistanceTimes   max times of distance (default: 3)
+    endlessStart       start timeline from endless (default: false)
+    navToSlide         click nav arrow to slide (default: false)
+    eventOffset        event offset before and after timeline in px (default: 60)
