@@ -68,7 +68,7 @@
                 self.timelineDates = self.parseDate(self.timelineEvents);
                 self.timelineDistances = self.timelineDistance(self.timelineDates);
 
-                timeline.addClass('ht-container').addClass('loaded');
+                timeline.addClass('ht-container');
                 if (self.settings.rotate)
                     self.timelineEvents.addClass('rotate');
 
@@ -77,7 +77,8 @@
                 //assign a width to the timeline
                 var timelineTotWidth = self.setTimelineWidth();
                 //the timeline has been initialize - show it
-
+                timeline.addClass('loaded');
+                //show selected event's content
                 self.updateVisibleContent( self.eventsWrapper.find('a.selected') )
 
                 //detect click on the next arrow

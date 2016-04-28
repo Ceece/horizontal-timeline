@@ -67,7 +67,7 @@ Main Components
 		position: absolute;
 		z-index: 1;
 		left: 0;
-	    @include y(80%);
+	    @include bottom(20px);
 		height: 2px;
 		/* width will be set using JavaScript */
 		background: darken($color-4, 10%);
@@ -164,7 +164,7 @@ Main Components
 		/* these are the left/right arrows to navigate the timeline */
 		position: absolute;
 		z-index: 1;
-	    @include y(80%);
+	    @include bottom(20px);
 		height: 34px;
 		width: 34px;
 		border-radius: 50%;
