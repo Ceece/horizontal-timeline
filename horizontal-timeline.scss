@@ -39,7 +39,10 @@ Main Components
 		position: relative;
 		width: 90%;
 		max-width: 800px;
-		margin: 0 auto;
+		margin-top: 0px;
+		margin-right: auto;
+		margin-bottom: 20px;
+		margin-left: auto;
 	}
 
 	.ht-events-wrapper {
@@ -235,7 +238,6 @@ Main Components
 
 		&.selected {
 			/* visible event content */
-			position: relative;
 			z-index: 2;
 			opacity: 1;
 			@include transform(translateX(0));

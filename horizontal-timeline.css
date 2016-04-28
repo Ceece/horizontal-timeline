@@ -24,7 +24,10 @@ Main Components
     position: relative;
     width: 90%;
     max-width: 800px;
-    margin: 0 auto; }
+    margin-top: 0px;
+    margin-right: auto;
+    margin-bottom: 20px;
+    margin-left: auto; }
   .ht-container .ht-events-wrapper {
     position: relative;
     height: 100%;
@@ -239,7 +242,6 @@ Main Components
     animation-timing-function: ease-in-out; }
     .ht-container .ht-events-content li.selected {
       /* visible event content */
-      position: relative;
       z-index: 2;
       opacity: 1;
       -webkit-transform: translateX(0);

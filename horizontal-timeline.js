@@ -49,7 +49,7 @@
             init: function() {
                 var self = this,
                     timeline = $(this.element),
-                    template = '<div class="ht-timeline"><div class="ht-events-wrapper"><div class="ht-events"><span class="ht-filling-line" aria-hidden="true"></span></div></div><ul class="ht-timeline-navigation"><li><a href="#" class="prev inactive">Prev</a></li><li><a href="#" class="next">Next</a></li></ul></div><div class="ht-events-content"></div>';
+                    template = '<div class="ht-timeline"><div class="ht-events-wrapper"><div class="ht-events"><span class="ht-filling-line" aria-hidden="true"></span></div></div><ul class="ht-timeline-navigation"><li><a href="#" class="prev">Prev</a></li><li><a href="#" class="next">Next</a></li></ul></div><div class="ht-events-content"></div>';
                 timeline.append(template);
                 
                 self.timelineWrapper = timeline.find('.ht-events-wrapper');
@@ -76,6 +76,8 @@
                 //assign a width to the timeline
                 var timelineTotWidth = self.setTimelineWidth();
                 //the timeline has been initialize - show it
+
+                self.updateVisibleContent( self.eventsWrapper.find('a.selected') )
 
                 //detect click on the next arrow
                 self.timelineNavigation.on('click', '.next', function(event){
@@ -173,9 +175,12 @@
                 value = (value > 0) ? 0 : value; //only negative translate value
                 value = ( !(typeof totWidth === 'undefined') &&  value < totWidth ) ? totWidth : value; //do not translate more than timeline width
                 self.setTransformValue(eventsWrapper, 'translateX', value+'px');
-                //update navigation arrows visibility
-                (value == 0 ) ? self.timelineNavigation.find('.prev').addClass('inactive') : self.timelineNavigation.find('.prev').removeClass('inactive');
-                (value == totWidth ) ? self.timelineNavigation.find('.next').addClass('inactive') : self.timelineNavigation.find('.next').removeClass('inactive');
+
+                if (self.settings.arrowToSlide) {
+                    //update navigation arrows visibility
+                    (value == 0 ) ? self.timelineNavigation.find('.prev').addClass('inactive') : self.timelineNavigation.find('.prev').removeClass('inactive');
+                    (value == totWidth ) ? self.timelineNavigation.find('.next').addClass('inactive') : self.timelineNavigation.find('.next').removeClass('inactive');
+                }
             },
 
             updateFilling: function(selectedEvent, filling, totWidth) {
@@ -205,6 +210,13 @@
                 
                 var scaleValue = eventLeft/totWidth;
                 self.setTransformValue(filling.get(0), 'scaleX', scaleValue);
+
+                if (self.settings.arrowToSlide == false) {
+                    //update navigation arrows visibility
+                    var index = selectedEvent.closest('li').index();
+                    (index == 0 ) ? self.timelineNavigation.find('.prev').addClass('inactive') : self.timelineNavigation.find('.prev').removeClass('inactive');
+                    (index == self.timelineEvents.length - 1 ) ? self.timelineNavigation.find('.next').addClass('inactive') : self.timelineNavigation.find('.next').removeClass('inactive');
+                }
             },
 
             setDatePosition: function() {
@@ -236,12 +248,15 @@
                 return totalWidth;
             },
 
-            updateVisibleContent: function(event, eventsContent) {
+            updateVisibleContent: function(event) {
                 var self = this,
                     eventDate = event.data('date'),
-                    visibleContent = eventsContent.find('.selected'),
-                    selectedContent = eventsContent.find('[data-date="'+ eventDate +'"]'),
+                    visibleContent = self.eventsContent.find('.selected'),
+                    selectedContent = self.eventsContent.find('[data-date="'+ eventDate +'"]'),
                     selectedContentHeight = selectedContent.height();
+
+                if (selectedContent.length > 1)
+                    selectedContent = selectedContent.eq( event.index('[data-date="'+ eventDate +'"]') );
 
                 if (selectedContent.index() > visibleContent.index()) {
                     var classEnetering = 'selected enter-right',
@@ -256,7 +271,7 @@
                     visibleContent.removeClass('leave-right leave-left');
                     selectedContent.removeClass('enter-left enter-right');
                 });
-                eventsContent.css('height', selectedContentHeight + self.settings.contentOffset +'px');
+                self.eventsContent.css('height', selectedContentHeight + self.settings.contentOffset +'px');
             },
 
             updateOlderEvents: function(event) {
@@ -358,7 +373,7 @@
                     } else if (diff >= day) {
                         return limitDistance(diff, day, self.settings.distance.day);
                     } else {
-                        return day;
+                        return limitDistance(day, day, self.settings.distance.day);
                     }
                 });
             },
