@@ -164,7 +164,7 @@ Main Components
 		/* these are the left/right arrows to navigate the timeline */
 		position: absolute;
 		z-index: 1;
-	    @include bottom(20px);
+	    @include bottom(-12px);
 		height: 34px;
 		width: 34px;
 		border-radius: 50%;

@@ -159,7 +159,7 @@ Main Components
     position: absolute;
     z-index: 1;
     top: auto;
-    bottom: 20px;
+    bottom: -12px;
     -webkit-transform: translateY(-50%);
     -moz-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
