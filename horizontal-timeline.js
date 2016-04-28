@@ -57,8 +57,9 @@
                 self.eventsContent = timeline.children('.ht-events-content');
                 self.timelineNavigation = timeline.find('.ht-timeline-navigation');
 
-                timeline.find('ul, ol').eq(0).prependTo( self.eventsWrapper );
-                timeline.find('ul, ol').eq(0).prependTo( self.eventsContent );
+                timeline.children('ul, ol').eq(0).prependTo( self.eventsWrapper );
+                if (timeline.children('ul, ol').eq(0))
+                    timeline.children('ul, ol').eq(0).prependTo( self.eventsContent );
                 timeline.find('.ht-timeline').css('height', self.settings.height + 'px');
 
                 //cache timeline components 
@@ -82,7 +83,7 @@
                 //detect click on the next arrow
                 self.timelineNavigation.on('click', '.next', function(event){
                     event.preventDefault();
-                    if( self.arrowToSlide)
+                    if( self.settings.arrowToSlide )
                         self.updateSlide(timelineTotWidth, 'next');
                     else
                         self.showNewContent(timelineTotWidth, 'next');
@@ -90,7 +91,7 @@
                 //detect click on the prev arrow
                 self.timelineNavigation.on('click', '.prev', function(event){
                     event.preventDefault();
-                    if( self.arrowToSlide)
+                    if( self.settings.arrowToSlide )
                         self.updateSlide(timelineTotWidth, 'prev');
                     else
                         self.showNewContent(timelineTotWidth, 'prev');
@@ -142,7 +143,7 @@
                     visibleContent =  self.eventsContent.find('.selected'),
                     newContent = ( string == 'next' ) ? visibleContent.next() : visibleContent.prev();
 
-                if ( newContent.length > 0 ) { //if there's a next/prev event - show it
+                if ( !self.timelineNavigation.find('.' + string).hasClass('inactive') ) { //if there's a next/prev event - show it
                     var selectedDate = self.eventsWrapper.find('.selected'),
                         newEvent = ( string == 'next' ) ? selectedDate.parent('li').next('li').children('a') : selectedDate.parent('li').prev('li').children('a');
                     
