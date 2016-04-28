@@ -21,10 +21,10 @@
                 navToSlide: false,
                 rotate: true,
                 height: 100,
-                distanceDay: 15,
-                distanceWeek: 50,
-                distanceMonth: 160,
-                distanceYear: 500,
+                distanceDay: 20,
+                distanceWeek: 60,
+                distanceMonth: 180,
+                distanceYear: 540,
                 maxDistanceTimes: 3
             };
 
