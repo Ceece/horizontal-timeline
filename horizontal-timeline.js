@@ -16,10 +16,9 @@
         // Create the defaults once
         var pluginName = "horizontalTimeline",
             defaults = {
-                firstEventOffset: 60,
-                contentOffset: 30,
+                eventOffset: 60,
                 endlessStart: false,
-                arrowToSlide: false,
+                navToSlide: false,
                 rotate: true,
                 height: 100,
                 distance: {
@@ -84,7 +83,7 @@
                 //detect click on the next arrow
                 self.timelineNavigation.on('click', '.next', function(event){
                     event.preventDefault();
-                    if( self.settings.arrowToSlide )
+                    if( self.settings.navToSlide )
                         self.updateSlide(timelineTotWidth, 'next');
                     else
                         self.showNewContent(timelineTotWidth, 'next');
@@ -92,7 +91,7 @@
                 //detect click on the prev arrow
                 self.timelineNavigation.on('click', '.prev', function(event){
                     event.preventDefault();
-                    if( self.settings.arrowToSlide )
+                    if( self.settings.navToSlide )
                         self.updateSlide(timelineTotWidth, 'prev');
                     else
                         self.showNewContent(timelineTotWidth, 'prev');
@@ -178,7 +177,7 @@
                 value = ( !(typeof totWidth === 'undefined') &&  value < totWidth ) ? totWidth : value; //do not translate more than timeline width
                 self.setTransformValue(eventsWrapper, 'translateX', value+'px');
 
-                if (self.settings.arrowToSlide) {
+                if (self.settings.navToSlide) {
                     //update navigation arrows visibility
                     (value == 0 ) ? self.timelineNavigation.find('.prev').addClass('inactive') : self.timelineNavigation.find('.prev').removeClass('inactive');
                     (value == totWidth ) ? self.timelineNavigation.find('.next').addClass('inactive') : self.timelineNavigation.find('.next').removeClass('inactive');
@@ -213,7 +212,7 @@
                 var scaleValue = eventLeft/totWidth;
                 self.setTransformValue(filling.get(0), 'scaleX', scaleValue);
 
-                if (self.settings.arrowToSlide == false) {
+                if (self.settings.navToSlide == false) {
                     //update navigation arrows visibility
                     var index = selectedEvent.closest('li').index();
                     (index == 0 ) ? self.timelineNavigation.find('.prev').addClass('inactive') : self.timelineNavigation.find('.prev').removeClass('inactive');
@@ -223,7 +222,7 @@
 
             setDatePosition: function() {
                 var self = this,
-                    distances = [self.settings.firstEventOffset].concat(self.timelineDistances),
+                    distances = [self.settings.eventOffset].concat(self.timelineDistances),
                     left = 0;
 
                 var eventsWidth = self.timelineEvents.map(function() {
@@ -242,7 +241,7 @@
 
             setTimelineWidth: function(width) {
                 var self = this,
-                    totalWidth = self.settings.firstEventOffset * 4 + self.timelineDistances.reduce(function(a, b) { return a + b});
+                    totalWidth = self.settings.eventOffset * 4 + self.timelineDistances.reduce(function(a, b) { return a + b});
                 self.eventsWrapper.css('width', totalWidth+'px');
                 self.updateFilling(self.eventsWrapper.find('a.selected'), self.fillingLine, totalWidth);
                 self.updateTimelinePosition('next', self.eventsWrapper.find('a.selected'));
@@ -273,7 +272,7 @@
                     visibleContent.removeClass('leave-right leave-left');
                     selectedContent.removeClass('enter-left enter-right');
                 });
-                self.eventsContent.css('height', selectedContentHeight + self.settings.contentOffset +'px');
+                self.eventsContent.css('height', selectedContentHeight +'px');
             },
 
             updateOlderEvents: function(event) {
