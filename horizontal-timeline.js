@@ -25,7 +25,8 @@
                 distanceWeek: 60,
                 distanceMonth: 180,
                 distanceYear: 540,
-                maxDistanceTimes: 3
+                maxDistanceTimes: 3,
+                minTimelineWidth: 1920
             };
 
         // The actual plugin constructor
@@ -238,9 +239,12 @@
                 }
             },
 
-            setTimelineWidth: function(width) {
+            setTimelineWidth: function() {
                 var self = this,
-                    totalWidth = self.settings.eventOffset * 4 + self.timelineDistances.reduce(function(a, b) { return a + b});
+                    totalWidth = self.settings.eventOffset * 4 + self.timelineDistances.reduce(function(a, b) { return a + b; }, 0);
+                if (totalWidth < self.settings.minTimelineWidth) {
+                    totalWidth = self.settings.minTimelineWidth;
+                }
                 self.eventsWrapper.css('width', totalWidth+'px');
                 self.updateFilling(self.eventsWrapper.find('a.selected'), self.fillingLine, totalWidth);
                 self.updateTimelinePosition('next', self.eventsWrapper.find('a.selected'));

@@ -61,3 +61,4 @@ For download, see https://github.com/Ceece/horizontal-timeline/releases
     endlessStart       start timeline from endless (default: false)
     navToSlide         click nav arrow to slide (default: false)
     eventOffset        event offset before and after timeline in px (default: 60)
+    minTimelineWidth   min timeline width (defalt: 1920)
